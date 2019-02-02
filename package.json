@@ -1,0 +1,25 @@
+{
+  "name": "@ghasemkiani/htmlmaker",
+  "version": "1.0.0",
+  "description": "HTML maker utility",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/ghasemkiani/htmlmaker.git"
+  },
+  "keywords": [
+    "javascript",
+    "nodejs",
+    "html",
+    "xml"
+  ],
+  "author": "Ghasem Kiani",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/ghasemkiani/htmlmaker/issues"
+  },
+  "homepage": "https://gitlab.com/ghasemkiani/htmlmaker#readme"
+}
