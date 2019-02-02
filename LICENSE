@@ -1,27 +1,22 @@
+The MIT License (MIT)
+Copyright (c) 2019 Ghasem Kiani
 
-Usage: npm <command>
 
-where <command> is one of:
-    access, adduser, audit, bin, bugs, c, cache, ci, cit,
-    completion, config, create, ddp, dedupe, deprecate,
-    dist-tag, docs, doctor, edit, explore, get, help,
-    help-search, hook, i, init, install, install-test, it, link,
-    list, ln, login, logout, ls, outdated, owner, pack, ping,
-    prefix, profile, prune, publish, rb, rebuild, repo, restart,
-    root, run, run-script, s, se, search, set, shrinkwrap, star,
-    stars, start, stop, t, team, test, token, tst, un,
-    uninstall, unpublish, unstar, up, update, v, version, view,
-    whoami
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-npm <command> -h  quick help on <command>
-npm -l            display full usage info
-npm help <term>   search for help on <term>
-npm help npm      involved overview
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-Specify configs in the ini-formatted file:
-    C:\Users\Ghasem\.npmrc
-or on the command line via: npm <command> --key value
-Config info can be viewed via: npm help config
-
-npm@6.4.1 H:\PROGS\npm\node_modules\npm
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+OR OTHER DEALINGS IN THE SOFTWARE.
 

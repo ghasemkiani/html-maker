@@ -21,5 +21,12 @@
   "bugs": {
     "url": "https://gitlab.com/ghasemkiani/htmlmaker/issues"
   },
-  "homepage": "https://gitlab.com/ghasemkiani/htmlmaker#readme"
+  "homepage": "https://gitlab.com/ghasemkiani/htmlmaker#readme",
+  "dependencies": {
+    "@ghasemkiani/commonbase": "git+https://gitlab.com/ghasemkiani/commonbase.git",
+    "@ghasemkiani/wdom": "git+https://gitlab.com/ghasemkiani/wdom.git"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  }
 }
