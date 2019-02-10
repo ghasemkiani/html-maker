@@ -4,7 +4,7 @@ const base = require("@ghasemkiani/commonbase/base");
 const {cutil} = require("@ghasemkiani/commonbase/cutil");
 
 class Base extends base.Base {
-	render(wnode) {
+	render({wnode}) {
 		//
 		return {wnode};
 	}
