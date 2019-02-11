@@ -1,11 +1,11 @@
 //	@ghasemkiani/htmlmaker/page
 
-const {Base} = require("@ghasemkiani/htmlmaker/base");
-const {serializable} = require("@ghasemkiani/commonbase/serializable");
+const {File} = require("@ghasemkiani/htmlmaker/file");
+const {renderable} = require("@ghasemkiani/htmlmaker/renderable");
 const {cutil} = require("@ghasemkiani/commonbase/cutil");
 const {WDocument} = require("@ghasemkiani/wdom/document");
 
-class Page extends cutil.mixin(Base, serializable) {
+class Page extends cutil.mixin(File, renderable) {
 	get window() {
 		if(!this._window) {
 			this._window = cutil.global().window;
@@ -66,6 +66,10 @@ class Page extends cutil.mixin(Base, serializable) {
 	
 	doRender() {
 		this.wdocument.root.cl();
+		let kk = this.wdocument.root.node.getAttributeNames();
+		for(let k of kk) {
+			this.wdocument.root.attr(k, null);
+		}
 		this.render({wnode: this.wdocument.root});
 		return this;
 	}
@@ -84,7 +88,6 @@ cutil.extend(Page.prototype, {
 	_window: null,
 	_wdocument: null,
 	
-	uri: "/",
 	title: null,
 });
 
