@@ -1,9 +1,12 @@
 //	@ghasemkiani/htmlmaker/page
 
+const fs = require("fs");
+
 const {File} = require("@ghasemkiani/htmlmaker/file");
 const {renderable} = require("@ghasemkiani/htmlmaker/renderable");
 const {cutil} = require("@ghasemkiani/commonbase/cutil");
 const {WDocument} = require("@ghasemkiani/wdom/document");
+const {Script} = require("@ghasemkiani/wdom/js/script");
 
 class Page extends cutil.mixin(File, renderable) {
 	get window() {
@@ -79,8 +82,74 @@ class Page extends cutil.mixin(File, renderable) {
 		return this.wdocument.string;
 	}
 	
-	makeRelativeUri(uri) {
-		return cutil.makeRelativeUri(uri, this.uri);
+	makeRelativeUri(uri, base) {
+		return cutil.makeRelativeUri(uri, !cutil.isNil(base) ? base : this.uri);
+	}
+	
+	renderDisqus({wnode, username, title, url, uri}) {
+		wnode.ch("div#disqus_thread");
+		wnode.ch("script", wnode => {
+			wnode.attr("src", new Script().add(
+			(
+({username, title, url, uri}) => {
+	var disqus_config = window.disqus_config = function () {
+		this.page.title = title;
+		this.page.url = url;
+		this.page.identifier = uri;
+	};
+	(function () {
+		var d = window.document,
+		s = d.createElement("script");
+		s.src = `https://${username}.disqus.com/embed.js`;
+		s.setAttribute("data-timestamp", new Date().getTime());
+		(d.head || d.body).appendChild(s);
+	})();
+}
+			), {username, title, url, uri}).dataUri);
+		});
+		wnode.ch("noscript", wnode => {
+			wnode.t("Please enable JavaScript to view the ");
+			wnode.ch("a[href=https://disqus.com/?ref_noscript]", wnode => {
+				wnode.t("comments powered by Disqus.");
+			});
+			wnode.t(".");
+		});
+	}
+	renderInclude({wnode, fn, cs}) {
+		let res = {wnode};
+		cs = cs || "UTF-8";
+		let text = fs.readFileSync(fn, {encoding: cs});
+		this.wdocument.ch("div", div => {
+			div.node.innerHTML = text;
+			div = this.wdocument.wrap(div.node);
+			for(let wn of div.wnodes) {
+				wnode.append(wn);
+			}
+		});
+		return {...res};
+	}
+	renderGoogleAnalytics({wnode, id, domain}) {
+		wnode.ch("script", wnode => {
+			wnode.attr("src", new Script().add(
+			(
+({id, domain}) => {
+	(function (i, s, o, g, r, a, m) {
+		i["GoogleAnalyticsObject"] = r;
+		i[r] = i[r] || function () {
+			(i[r].q = i[r].q || []).push(arguments);
+		},
+		i[r].l = 1 * new Date();
+		a = s.createElement(o),
+		m = s.getElementsByTagName(o)[0];
+		a.async = 1;
+		a.src = g;
+		m.parentNode.insertBefore(a, m);
+	})(window, document, "script", "https://www.google-analytics.com/analytics.js", "ga");
+	ga("create", id, domain);
+	ga("send", "pageview");
+}
+			), {id, domain}).dataUri);
+		});
 	}
 }
 cutil.extend(Page.prototype, {
