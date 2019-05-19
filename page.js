@@ -53,6 +53,21 @@ class Page extends cutil.mixin(File, renderable) {
 			wnodeTitle = wnode;
 			this.renderTitle({wnode});
 		});
+		if(this.description) {
+			wnode.ch("meta[name=description]", wnode => {
+				wnode.attr("content", this.description);
+			});
+		}
+		if(this.keywords) {
+			wnode.ch("meta[name=keywords]", wnode => {
+				wnode.attr("content", this.keywords);
+			});
+		}
+		if(this.author) {
+			wnode.ch("meta[name=author]", wnode => {
+				wnode.attr("content", this.author);
+			});
+		}
 		return {...res, wnodeTitle};
 	}
 	renderTitle({wnode}) {
@@ -71,7 +86,9 @@ class Page extends cutil.mixin(File, renderable) {
 		this.wdocument.root.cl();
 		let kk = this.wdocument.root.node.getAttributeNames();
 		for(let k of kk) {
-			this.wdocument.root.attr(k, null);
+			if(!/^xmlns/i.test(k)) {
+				this.wdocument.root.attr(k, null);
+			}
 		}
 		this.render({wnode: this.wdocument.root});
 		return this;
@@ -128,7 +145,7 @@ class Page extends cutil.mixin(File, renderable) {
 		});
 		return {...res};
 	}
-	renderGoogleAnalytics({wnode, id, domain}) {
+	renderGoogleAnalytics0({wnode, id, domain}) {
 		wnode.ch("script", wnode => {
 			wnode.attr("src", new Script().add(
 			(
@@ -151,6 +168,23 @@ class Page extends cutil.mixin(File, renderable) {
 			), {id, domain}).dataUri);
 		});
 	}
+	renderGoogleAnalytics({wnode, id}) {
+		wnode.ch("script", wnode => {
+			wnode.attr("src", `https://www.googletagmanager.com/gtag/js?id=${id}`);
+		});
+		wnode.ch("script", wnode => {
+			wnode.attr("src", new Script().add(
+			(
+({id}) => {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag("js", new Date());
+
+	gtag("config", id);
+}
+			), {id}).dataUri);
+		});
+	}
 }
 cutil.extend(Page.prototype, {
 	mime: "text/html",
@@ -158,6 +192,9 @@ cutil.extend(Page.prototype, {
 	_wdocument: null,
 	
 	title: null,
+	description: null,
+	keywords: null,
+	author: null,
 });
 
 module.exports = {Page};
