@@ -7,6 +7,7 @@ const {renderable} = require("@ghasemkiani/htmlmaker/renderable");
 const {cutil} = require("@ghasemkiani/commonbase/cutil");
 const {WDocument} = require("@ghasemkiani/wdom/document");
 const {Script} = require("@ghasemkiani/wdom/js/script");
+const {Stylesheet} = require("@ghasemkiani/wdom/css/stylesheet");
 
 class Page extends cutil.mixin(File, renderable) {
 	get window() {
@@ -184,6 +185,27 @@ class Page extends cutil.mixin(File, renderable) {
 }
 			), {id}).dataUri);
 		});
+	}
+	renderStylesheet({wnode, url, onStylesheet, asDataUri}) {
+		let wnodeLink;
+		let wnodeStyle;
+		if(url) {
+			wnode.ch("link[rel=stylesheet,type=text/css]", wnode => {
+				wnodeLink = wnode;
+				wnode.attr("href", url);
+			});
+		} else {
+			let ss = new Stylesheet().chain(onStylesheet);
+			if(asDataUri) {
+				let url = ss.dataUri;
+				return this.renderStylesheet({wnode, url});
+			} else {
+				wnode.ch("style[type=text/css]", wnode => {
+					wnode.t(ss.string);
+				});
+			}
+		}
+		return {wnode,  wnodeLink, wnodeStyle};
 	}
 }
 cutil.extend(Page.prototype, {
