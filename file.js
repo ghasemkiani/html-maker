@@ -1,8 +1,8 @@
 //	@ghasemkiani/htmlmaker/file
 
-const {Base} = require("@ghasemkiani/commonbase/base");
-const {cutil} = require("@ghasemkiani/commonbase/cutil");
-const {serializable} = require("@ghasemkiani/commonbase/serializable");
+const {Obj: Base} = require("@ghasemkiani/base/obj");
+const {cutil} = require("@ghasemkiani/base/cutil");
+const {serializable} = require("@ghasemkiani/base/serializable");
 
 class File extends cutil.mixin(Base, serializable) {
 	//

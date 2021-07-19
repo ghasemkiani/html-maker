@@ -4,7 +4,7 @@ const fs = require("fs");
 
 const {File} = require("@ghasemkiani/htmlmaker/file");
 const {renderable} = require("@ghasemkiani/htmlmaker/renderable");
-const {cutil} = require("@ghasemkiani/commonbase/cutil");
+const {cutil} = require("@ghasemkiani/base/cutil");
 const {WDocument} = require("@ghasemkiani/wdom/document");
 const {Script} = require("@ghasemkiani/wdom/js/script");
 const {Stylesheet} = require("@ghasemkiani/wdom/css/stylesheet");
@@ -35,16 +35,18 @@ class Page extends cutil.mixin(File, renderable) {
 		let wnodeHtml;
 		let wnodeHead;
 		let wnodeBody;
+		let resHead;
+		let resBody;
 		wnodeHtml = wnode;
 		wnode.ch("head", wnode => {
 			wnodeHead = wnode;
-			this.renderHead({wnode});
+			resHead = this.renderHead({wnode});
 		});
 		wnode.ch("body", wnode => {
 			wnodeBody = wnode;
-			this.renderBody({wnode});
+			resBody = this.renderBody({wnode});
 		});
-		return {wnode, wnodeHtml, wnodeHead, wnodeBody};
+		return {wnode, wnodeHtml, wnodeHead, wnodeBody, ...resHead, ...resBody};
 	}
 	renderHead({wnode}) {
 		let res = {wnode};

@@ -1,7 +1,7 @@
 //	@ghasemkiani/htmlmaker/component
 
-const {Base} = require("@ghasemkiani/commonbase/base");
-const {cutil} = require("@ghasemkiani/commonbase/cutil");
+const {Obj: Base} = require("@ghasemkiani/base/obj");
+const {cutil} = require("@ghasemkiani/base/cutil");
 const {renderable} = require("@ghasemkiani/htmlmaker/renderable");
 
 class Component extends cutil.mixin(Base, renderable) {
