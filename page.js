@@ -1,13 +1,15 @@
 //	@ghasemkiani/htmlmaker/page
 
-const fs = require("fs");
+import fs from "fs";
 
-const {File} = require("@ghasemkiani/htmlmaker/file");
-const {renderable} = require("@ghasemkiani/htmlmaker/renderable");
-const {cutil} = require("@ghasemkiani/base/cutil");
-const {WDocument} = require("@ghasemkiani/wdom/document");
-const {Script} = require("@ghasemkiani/wdom/js/script");
-const {Stylesheet} = require("@ghasemkiani/wdom/css/stylesheet");
+import {cutil} from "@ghasemkiani/base";
+import {WDocument} from "@ghasemkiani/wdom";
+import {js} from "@ghasemkiani/wdom";
+const {Script} = js;
+import {css} from "@ghasemkiani/wdom";
+const {Stylesheet} = css;
+import {renderable} from "./renderable.js";
+import {File} from "./file.js";
 
 class Page extends cutil.mixin(File, renderable) {
 	get window() {
@@ -221,4 +223,4 @@ cutil.extend(Page.prototype, {
 	author: null,
 });
 
-module.exports = {Page};
+export {Page};

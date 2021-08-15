@@ -8,4 +8,4 @@ const renderable = {
 	},
 };
 
-module.exports = {renderable};
+export {renderable};

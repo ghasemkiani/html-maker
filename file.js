@@ -1,14 +1,14 @@
 //	@ghasemkiani/htmlmaker/file
 
-const {Obj: Base} = require("@ghasemkiani/base/obj");
-const {cutil} = require("@ghasemkiani/base/cutil");
-const {serializable} = require("@ghasemkiani/base/serializable");
+import {Obj} from "@ghasemkiani/base";
+import {cutil} from "@ghasemkiani/base";
+import {serializable} from "@ghasemkiani/base";
 
-class File extends cutil.mixin(Base, serializable) {
+class File extends cutil.mixin(Obj, serializable) {
 	//
 }
 cutil.extend(File.prototype, {
 	uri: "/",
 });
 
-module.exports = {File};
+export {File};

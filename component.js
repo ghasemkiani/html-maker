@@ -1,14 +1,14 @@
 //	@ghasemkiani/htmlmaker/component
 
-const {Obj: Base} = require("@ghasemkiani/base/obj");
-const {cutil} = require("@ghasemkiani/base/cutil");
-const {renderable} = require("@ghasemkiani/htmlmaker/renderable");
+import {Obj} from "@ghasemkiani/base";
+import {cutil} from "@ghasemkiani/base";
+import {renderable} from "./renderable.js";
 
-class Component extends cutil.mixin(Base, renderable) {
+class Component extends cutil.mixin(Obj, renderable) {
 	//
 }
 cutil.extend(Component.prototype, {
 	//
 });
 
-module.exports = {Component};
+export {Component};

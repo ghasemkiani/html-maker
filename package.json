@@ -1,7 +1,8 @@
 {
   "name": "@ghasemkiani/htmlmaker",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "description": "HTML maker utility",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
