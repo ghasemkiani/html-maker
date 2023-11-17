@@ -1,18 +1,20 @@
-import test from "ava";
+import assert from "node:assert";
+import test from "node:test";
+
 import {renderable} from "../renderable.js";
 import {Component} from "../component.js";
 import {Page} from "../page.js";
 import {File} from "../file.js";
 
-test("htmlmaker:Page#makeRelativeUri(): should create the correct relative URI", async t => {
+await test("htmlmaker:Page#makeRelativeUri(): should create the correct relative URI", async (t) => {
 	let page = new Page();
 
     page.uri = "/";
-    t.is(page.makeRelativeUri("/books/sblp/"), "books/sblp/");
+    assert.equal(page.makeRelativeUri("/books/sblp/"), "books/sblp/");
     page.uri = "/translation";
-    t.is(page.makeRelativeUri("/books/sblp/"), "books/sblp/");
+    assert.equal(page.makeRelativeUri("/books/sblp/"), "books/sblp/");
     page.uri = "/translation/";
-    t.is(page.makeRelativeUri("/books/sblp/"), "../books/sblp/");
+    assert.equal(page.makeRelativeUri("/books/sblp/"), "../books/sblp/");
     page.uri = "/translation/index.html";
-    t.is(page.makeRelativeUri("/books/sblp/"), "../books/sblp/");
+    assert.equal(page.makeRelativeUri("/books/sblp/"), "../books/sblp/");
 });

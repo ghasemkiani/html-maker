@@ -1,34 +1,30 @@
 {
-  "name": "@ghasemkiani/htmlmaker",
-  "version": "2.2.0",
-  "description": "HTML maker utility",
-  "type": "module",
-  "main": "index.js",
-  "scripts": {
-    "test1": "mocha test/*.cjs",
-    "test": "ava"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://gitlab.com/ghasemkiani/htmlmaker.git"
-  },
-  "keywords": [
-    "javascript",
-    "nodejs",
-    "html",
-    "xml"
-  ],
-  "author": "Ghasem Kiani",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://gitlab.com/ghasemkiani/htmlmaker/issues"
-  },
-  "homepage": "https://gitlab.com/ghasemkiani/htmlmaker#readme",
-  "dependencies": {
-    "@ghasemkiani/base": "github:ghasemkiani/base",
-    "@ghasemkiani/wdom": "gitlab:ghasemkiani/wdom"
-  },
-  "devDependencies": {
-    "ava": "^3.15.0"
-  }
+	"name": "@ghasemkiani/htmlmaker",
+	"version": "2.2.1",
+	"description": "HTML maker utility",
+	"type": "module",
+	"main": "index.js",
+	"scripts": {
+		"test": "node --test"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://gitlab.com/ghasemkiani/htmlmaker.git"
+	},
+	"keywords": [
+		"javascript",
+		"nodejs",
+		"html",
+		"xml"
+	],
+	"author": "Ghasem Kiani",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://gitlab.com/ghasemkiani/htmlmaker/issues"
+	},
+	"homepage": "https://gitlab.com/ghasemkiani/htmlmaker#readme",
+	"dependencies": {
+		"@ghasemkiani/base": "github:ghasemkiani/base",
+		"@ghasemkiani/wdom": "github:ghasemkiani/wdom"
+	}
 }

@@ -107,7 +107,7 @@ class Page extends cutil.mixin(File, renderable) {
 	makeRelativeUri(uri, base) {
 		return cutil.makeRelativeUri(uri, !cutil.isNil(base) ? base : this.uri);
 	}
-	
+	/*
 	renderDisqus({wnode, username, title, url, uri}) {
 		wnode.ch("div#disqus_thread");
 		wnode.ch("script", wnode => {
@@ -190,6 +190,7 @@ class Page extends cutil.mixin(File, renderable) {
 			), {id}).dataUri);
 		});
 	}
+	*/
 	renderStylesheet({wnode, url, onStylesheet, asDataUri}) {
 		let wnodeLink;
 		let wnodeStyle;
