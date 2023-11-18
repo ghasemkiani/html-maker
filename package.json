@@ -1,6 +1,6 @@
 {
-	"name": "@ghasemkiani/htmlmaker",
-	"version": "2.2.1",
+	"name": "@ghasemkiani/html-maker",
+	"version": "2.3.0",
 	"description": "HTML maker utility",
 	"type": "module",
 	"main": "index.js",
@@ -9,7 +9,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://gitlab.com/ghasemkiani/htmlmaker.git"
+		"url": "git+https://gitlab.com/ghasemkiani/html-maker.git"
 	},
 	"keywords": [
 		"javascript",
@@ -20,11 +20,12 @@
 	"author": "Ghasem Kiani",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://gitlab.com/ghasemkiani/htmlmaker/issues"
+		"url": "https://gitlab.com/ghasemkiani/html-maker/issues"
 	},
-	"homepage": "https://gitlab.com/ghasemkiani/htmlmaker#readme",
+	"homepage": "https://gitlab.com/ghasemkiani/html-maker#readme",
 	"dependencies": {
 		"@ghasemkiani/base": "github:ghasemkiani/base",
-		"@ghasemkiani/wdom": "github:ghasemkiani/wdom"
+		"@ghasemkiani/wdom": "github:ghasemkiani/wdom",
+		"@ghasemkiani/wjsdom": "github:ghasemkiani/wjsdom"
 	}
 }

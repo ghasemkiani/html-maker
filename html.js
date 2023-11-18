@@ -1,60 +1,71 @@
+import fs from "node:fs";
+
 import {cutil} from "@ghasemkiani/base";
 import {Obj} from "@ghasemkiani/base";
+import {WDocument} from "@ghasemkiani/wjsdom";
 import {js} from "@ghasemkiani/wdom";
-import {css} from "@ghasemkiani/wdom";
-
 const {Script} = js;
+import {css} from "@ghasemkiani/wdom";
 const {Stylesheet} = css;
 
-const html = new class {
-	makeDoc({wHtml, title, description, keywords, author}) {
-		let html = this;
-		let wHead;
-		let wTitle;
-		let wDescription;
-		let wKeywords;
-		let wAuthor;
-		let wBody;
-		wHtml.chain(wnode => {
-			wnode.ch("head", wnode => {
-				wHead = wnode;
-				wnode.ch("meta[charset=utf-8]");
+class Html extends Obj {
+	static makeDoc(arg) {
+		let {wdocument, whtml, title, description, keywords, author} = cutil.asObject(arg);
+		wdocument ||= new WDocument();
+		whtml ||= wdocument.root;
+		let whead = whtml.wnodes.filter(({kind}) => kind === "element").find(({tag}) => /head/i.test(tag));
+		if (!whead) {
+			whtml.ch("head", wnode => {
+				whead = wnode;
+			});
+		}
+		let wdescription;
+		let wkeywords;
+		let wauthor;
+		whead.chain(wnode => {
+			wnode.ch("meta[charset=utf-8]");
+			let wtitle = wnode.wnodes.filter(({kind}) => kind === "element").find(({tag}) => /title/i.test(tag));
+			if (!wtitle) {
 				wnode.ch("title", wnode => {
-					wTitle = wnode;
-					if (cutil.a(title)) {
-						wnode.t(title);
-					}
+					wtitle = wnode;
 				});
-				if (cutil.a(description)) {
-					wnode.ch("meta[name=description]", wnode => {
-						wDescription = wnode;
-						wnode.attr("content", description);
-					});
-				}
-				if (cutil.a(keywords)) {
-					wnode.ch("meta[name=keywords]", wnode => {
-						wKeywords = wnode;
-						wnode.attr("content", keywords);
-					});
-				}
-				if (cutil.a(author)) {
-					wnode.ch("meta[name=author]", wnode => {
-						wAuthor = wnode;
-						wnode.attr("content", author);
-					});
+			}
+			wtitle.chain(wnode => {
+				if (cutil.a(title)) {
+					wnode.t(title);
 				}
 			});
-			wnode.ch("body", wnode => {
-				wBody = wnode;
-			});
+			if (cutil.a(description)) {
+				wnode.ch("meta[name=description]", wnode => {
+					wdescription = wnode;
+					wnode.attr("content", description);
+				});
+			}
+			if (cutil.a(keywords)) {
+				wnode.ch("meta[name=keywords]", wnode => {
+					wkeywords = wnode;
+					wnode.attr("content", keywords);
+				});
+			}
+			if (cutil.a(author)) {
+				wnode.ch("meta[name=author]", wnode => {
+					wauthor = wnode;
+					wnode.attr("content", author);
+				});
+			}
 		});
-		return {wHead, wBody, wTitle, wDescription, wKeywords, wAuthor};
+		let wbody = whtml.wnodes.filter(({kind}) => kind === "element").find(({tag}) => /body/i.test(tag));
+		if (!wbody) {
+			whtml.ch("body", wnode => {
+				wbody = wnode;
+			});
+		}
+		return {wdocument, whtml, whead, wtitle, wbody, wdescription, wkeywords, wauthor};
 	}
-	makeScript({wnode, url, f, params, asDataUri = false, integrity, crossorigin}) {
-		let html = this;
-		let wScript;
+	static makeScript({wnode, url, f, params, asDataUri = false, integrity, crossorigin}) {
+		let wscript;
 		wnode.ch("script", wnode => {
-			wScript = wnode;
+			wscript = wnode;
 			if (url) {
 				wnode.attr("src", url);
 			} else {
@@ -72,15 +83,14 @@ const html = new class {
 				wnode.attr("crossorigin", crossorigin);
 			}
 		});
-		return {wScript};
+		return {wscript};
 	}
-	makeStylesheet({wnode, url, onStylesheet, asDataUri = false, integrity, crossorigin}) {
-		let html = this;
-		let wLink;
-		let wStyle;
+	static makeStylesheet({wnode, url, onStylesheet, asDataUri = false, integrity, crossorigin}) {
+		let wlink;
+		let wstyle;
 		if (url) {
 			wnode.ch("link[rel=stylesheet,type=text/css]", wnode => {
-				wLink = wnode;
+				wlink = wnode;
 				wnode.attr("href", url);
 				if (cutil.a(integrity)) {
 					wnode.attr("integrity", integrity);
@@ -93,93 +103,117 @@ const html = new class {
 			let ss = new Stylesheet().chain(onStylesheet);
 			if (asDataUri) {
 				let url = ss.dataUri;
-				return html.makeStylesheet({wnode, url});
+				return this.makeStylesheet({wnode, url});
 			} else {
 				wnode.ch("style[type=text/css]", wnode => {
 					wnode.t(ss.string);
 				});
 			}
 		}
-		return {wLink, wStyle};
+		return {wlink, wstyle};
 	}
-	makeDisqus({wnode, username, title, url, uri, asDataUri = true}) {
-		let html = this;
-		let wNoScript;
+	static makeFavicon({whead, uri = "/favicon.ico"}) {
+		let wlink;
+		whead.chain(wnode => {
+			wnode.ch("link[rel=icon,type=image/x-icon]", wnode => {
+				wlink = wnode;
+				wnode.attr("href", uri);
+			});
+		});
+		return {wlink};
+	}
+	static makeResponsive({whead}) {
+		whead.ch("meta", wnode => {
+			wnode.attr("name", "viewport");
+			wnode.attr("content", "width=device-width,initial-scale=1");
+		});
+	}
+	static makeGoogleAnalytics0({wnode, id, domain}) {
+		wnode.ch("script", wnode => {
+			wnode.attr("src", new Script().add(
+			(
+({id, domain}) => {
+	(function (i, s, o, g, r, a, m) {
+		i["GoogleAnalyticsObject"] = r;
+		i[r] = i[r] || function () {
+			(i[r].q = i[r].q || []).push(arguments);
+		},
+		i[r].l = 1 * new Date();
+		a = s.createElement(o),
+		m = s.getElementsByTagName(o)[0];
+		a.async = 1;
+		a.src = g;
+		m.parentNode.insertBefore(a, m);
+	})(window, document, "script", "https://www.google-analytics.com/analytics.js", "ga");
+	ga("create", id, domain);
+	ga("send", "pageview");
+}
+			), {id, domain}).dataUri);
+		});
+	}
+	static makeGoogleAnalytics({wnode, id}) {
+		wnode.ch("script", wnode => {
+			wnode.attr("src", `https://www.googletagmanager.com/gtag/js?id=${id}`);
+		});
+		wnode.ch("script", wnode => {
+			wnode.attr("src", new Script().add(
+			(
+({id}) => {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag("js", new Date());
+
+	gtag("config", id);
+}
+			), {id}).dataUri);
+		});
+	}
+	static makeDisqus({wnode, username, title, url, uri}) {
 		wnode.ch("div#disqus_thread");
-		let {wScript} = html.makeScript({
-			wnode,
-			f: ({username, title, url, uri}) => {
-				var disqus_config = window.disqus_config = function () {
-					this.page.title = title;
-					this.page.url = url;
-					this.page.identifier = uri;
-				};
-				((d, s) => {
-					d = window.document,
-					s = d.createElement("script");
-					s.src = `https://${username}.disqus.com/embed.js`;
-					s.setAttribute("data-timestamp", new Date().getTime());
-					(d.head || d.body).appendChild(s);
-				})();
-			},
-			params: {username, title, url, uri},
-			asDataUri,
+		wnode.ch("script", wnode => {
+			wnode.attr("src", new Script().add(
+			(
+({username, title, url, uri}) => {
+	var disqus_config = window.disqus_config = function () {
+		this.page.title = title;
+		this.page.url = url;
+		this.page.identifier = uri;
+	};
+	(function () {
+		var d = window.document,
+		s = d.createElement("script");
+		s.src = `https://${username}.disqus.com/embed.js`;
+		s.setAttribute("data-timestamp", new Date().getTime());
+		(d.head || d.body).appendChild(s);
+	})();
+}
+			), {username, title, url, uri}).dataUri);
 		});
 		wnode.ch("noscript", wnode => {
-			wNoScript = wnode;
 			wnode.t("Please enable JavaScript to view the ");
 			wnode.ch("a[href=https://disqus.com/?ref_noscript]", wnode => {
 				wnode.t("comments powered by Disqus.");
 			});
 			wnode.t(".");
 		});
-		return {wScript, wNoScript};
 	}
-	makeGoogleAnalytics0({wnode, id, domain, asDataUri = true}) {
-		let html = this;
-		let {wScript} = html.makeScript({
-			wnode,
-			f: ({id, domain}) => {
-				((i, s, o, g, r, a, m) => {
-					i["GoogleAnalyticsObject"] = r;
-					i[r] = i[r] || function () {
-						(i[r].q = i[r].q || []).push(arguments);
-					},
-					i[r].l = 1 * new Date();
-					a = s.createElement(o),
-					m = s.getElementsByTagName(o)[0];
-					a.async = 1;
-					a.src = g;
-					m.parentNode.insertBefore(a, m);
-				})(window, document, "script", "https://www.google-analytics.com/analytics.js", "ga");
-				ga("create", id, domain);
-				ga("send", "pageview");
-			},
-			params: {id, domain},
-			asDataUri,
+	static makeInclude({wnode, fn, cs}) {
+		let {wdocument} = wnode;
+		let res = {wnode};
+		cs = cs || "UTF-8";
+		let text = fs.readFileSync(fn, {encoding: cs});
+		wdocument.ch("div", div => {
+			div.node.innerHTML = text;
+			div = wdocument.wrap(div.node);
+			for(let wn of div.wnodes) {
+				wnode.append(wn);
+			}
 		});
-		return {wScript};
+		return {...res};
 	}
-	makeGoogleAnalytics({wnode, id, asDataUri = true}) {
-		let html = this;
-		let wScript1;
-		wnode.ch("script", wnode => {
-			wScript1 = wnode;
-			wnode.attr("src", `https://www.googletagmanager.com/gtag/js?id=${id}`);
-		});
-		let {wScript: wScript2} = html.makeScript({
-			wnode,
-			f: ({id}) => {
-				window.dataLayer = window.dataLayer || [];
-				function gtag(){dataLayer.push(arguments);}
-				gtag("js", new Date());
-				gtag("config", id);
-			},
-			params: {id},
-			asDataUri,
-		});
-		return {wScript1, wScript2};
+	static importGoogleFont({ss, name}) {
+		ss.instruction(`@import url(https://fonts.googleapis.com/css?family=${encodeURIComponent(name)});`);
 	}
-}();
+}
 
-export {html};
+export {Html};
