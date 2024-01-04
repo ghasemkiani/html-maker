@@ -2,7 +2,6 @@ import fs from "node:fs";
 
 import {cutil} from "@ghasemkiani/base";
 import {Obj} from "@ghasemkiani/base";
-import {WDocument} from "@ghasemkiani/wjsdom";
 import {js} from "@ghasemkiani/wdom";
 const {Script} = js;
 import {css} from "@ghasemkiani/wdom";
@@ -11,7 +10,10 @@ const {Stylesheet} = css;
 class Html extends Obj {
 	static makeDoc(arg) {
 		let {wdocument, whtml, title, description, keywords, author} = cutil.asObject(arg);
-		wdocument ||= new WDocument();
+		if (cutil.na(wdocument) && cutil.na(whtml)) {
+			throw new Error("Html.makeDoc: either wdocument or whtml must be provide.");
+		}
+		wdocument ||= whtml.wdocument;
 		whtml ||= wdocument.root;
 		let whead = whtml.wnodes.filter(({kind}) => kind === "element").find(({tag}) => /head/i.test(tag));
 		if (!whead) {
