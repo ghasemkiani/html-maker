@@ -24,9 +24,10 @@ class Html extends Obj {
 		let wdescription;
 		let wkeywords;
 		let wauthor;
+		let wtitle;
 		whead.chain(wnode => {
 			wnode.ch("meta[charset=utf-8]");
-			let wtitle = wnode.wnodes.filter(({kind}) => kind === "element").find(({tag}) => /title/i.test(tag));
+			wtitle = wnode.wnodes.filter(({kind}) => kind === "element").find(({tag}) => /title/i.test(tag));
 			if (!wtitle) {
 				wnode.ch("title", wnode => {
 					wtitle = wnode;
