@@ -1,12 +1,10 @@
 import {cutil} from "@ghasemkiani/base";
 import {DOM} from "@ghasemkiani/dom";
+import {X, iwx} from "@ghasemkiani/xdom";
 
-const host = {
+const host = cutil.extend({}, iwx, {
 	_window: null,
 	_document: null,
-	getWindow() {
-		return DOM.get();
-	},
 	get window() {
 		if (cutil.na(this._window)) {
 			this._window = this.getWindow();
@@ -25,6 +23,9 @@ const host = {
 	set document(document) {
 		this._document = document;
 	},
-};
+	getWindow() {
+		return DOM.get();
+	},
+});
 
 export {host};
