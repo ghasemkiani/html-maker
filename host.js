@@ -16,7 +16,7 @@ const host = cutil.extend({}, iwx, {
 	},
 	get document() {
 		if (cutil.na(this._document)) {
-			this._document = this.window.document;
+			this._document = this.getDocument();
 		}
 		return this._document;
 	},
@@ -25,6 +25,9 @@ const host = cutil.extend({}, iwx, {
 	},
 	getWindow() {
 		return DOM.get();
+	},
+	getDocument() {
+		return this.window.document;
 	},
 });
 
