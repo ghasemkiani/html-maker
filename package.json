@@ -1,6 +1,6 @@
 {
 	"name": "@ghasemkiani/html-maker",
-	"version": "2.4.3",
+	"version": "2.4.4",
 	"description": "HTML maker utility",
 	"type": "module",
 	"main": "index.js",

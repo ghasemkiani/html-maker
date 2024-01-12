@@ -19,7 +19,8 @@ class XHtml extends cutil.mixin(Obj, maker) {
 			} else {
 				document = x.doc();
 			}
-		} else if (cutil.na(nhtml)) {
+		}
+		if (cutil.na(nhtml)) {
 			nhtml = x.root(document);
 		}
 		let nhead = document.head || x.ch(nhtml, "head");
@@ -54,14 +55,14 @@ class XHtml extends cutil.mixin(Obj, maker) {
 		let nbody = document.body || x.ch(nhtml, "body");
 		return {document, nhtml, nhead, ntitle, nbody, ndescription, nkeywords, nauthor};
 	}
-	makeScript({node, url, f, params, asDataUri = false, integrity, crossorigin, cdata = false}) {
+	makeScript({node, url, f, arg, asDataUri = false, integrity, crossorigin, cdata = false}) {
 		let {x} = this;
 		let nscript;
 		nscript = x.ch(node, "script", node => {
 			if (url) {
 				x.attr(node, "src", url);
 			} else {
-				let script = x.js(f);
+				let script = x.js(f, arg);
 				if (asDataUri) {
 					x.attr(node, "src", script.dataUri);
 				} else {
@@ -112,102 +113,100 @@ class XHtml extends cutil.mixin(Obj, maker) {
 		}
 		return {nlink, nstyle};
 	}
-	makeFavicon({nhead, uri = "/favicon.ico"}) {
+	makeFavicon({node, nhead, uri = "/favicon.ico"}) {
 		let {x} = this;
-		let nlink;
-		nhead.chain(node => {
-			x.ch(node, "link[rel=icon,type=image/x-icon]", node => {
-				nlink = node;
-				x.attr(node, "href", uri);
-			});
+		node ||= nhead;
+		let nlink = x.ch(node, "link[rel=icon,type=image/x-icon]", node => {
+			x.attr(node, "href", uri);
 		});
 		return {nlink};
 	}
-	makeResponsive({nhead}) {
+	makeResponsive({node, nhead}) {
 		let {x} = this;
-		nhead.ch("meta", node => {
-			x.attr(node, "name", "viewport");
+		node ||= nhead;
+		x.ch(node, "meta[name=viewport]", node => {
 			x.attr(node, "content", "width=device-width,initial-scale=1");
 		});
 	}
-	makeGoogleAnalytics0({node, id, domain}) {
+	makeGoogleAnalytics0({node, id, domain, asDataUri = true, cdata = false}) {
 		let {x} = this;
-		x.ch(node, "script", node => {
-			x.attr(node, "src", new Script().add((({id, domain}) => {
-						(function (i, s, o, g, r, a, m) {
-							i["GoogleAnalyticsObject"] = r;
-							i[r] = i[r] || function () {
-								(i[r].q = i[r].q || []).push(arguments);
-							},
-							i[r].l = 1 * new Date();
-							a = s.createElement(o),
-							m = s.getElementsByTagName(o)[0];
-							a.async = 1;
-							a.src = g;
-							m.parentNode.insertBefore(a, m);
-						})(window, document, "script", "https://www.google-analytics.com/analytics.js", "ga");
-						ga("create", id, domain);
-						ga("send", "pageview");
-					}), {id, domain}).dataUri);
+		this.makeScript({
+			node,
+			f: ({id, domain}) => {
+				(function (i, s, o, g, r, a, m) {
+					i["GoogleAnalyticsObject"] = r;
+					i[r] = i[r] || function () {
+						(i[r].q = i[r].q || []).push(arguments);
+					},
+					i[r].l = 1 * new Date();
+					a = s.createElement(o),
+					m = s.getElementsByTagName(o)[0];
+					a.async = 1;
+					a.src = g;
+					m.parentNode.insertBefore(a, m);
+				})(window, document, "script", "https://www.google-analytics.com/analytics.js", "ga");
+				ga("create", id, domain);
+				ga("send", "pageview");
+			},
+			arg: {id, domain},
+			asDataUri,
+			cdata,
 		});
 	}
-	makeGoogleAnalytics({node, id}) {
+	makeGoogleAnalytics({node, id, asDataUri = true, cdata = false}) {
 		let {x} = this;
-		x.ch(node, "script", node => {
-			x.attr(node, "src", `https://www.googletagmanager.com/gtag/js?id=${id}`);
-		});
-		x.ch(node, "script", node => {
-			x.attr(node, "src", new Script().add((({id}) => {
-						window.dataLayer = window.dataLayer || [];
-						function gtag() {
-							dataLayer.push(arguments);
-						}
-						gtag("js", new Date());
-						gtag("config", id);
-					}), {id}).dataUri);
+		this.makeScript({node, url: `https://www.googletagmanager.com/gtag/js?id=${id}`});
+		this.makeScript({
+			node,
+			f: ({id}) => {
+				window.dataLayer = window.dataLayer || [];
+				function gtag() {
+					dataLayer.push(arguments);
+				}
+				gtag("js", new Date());
+				gtag("config", id);
+			},
+			arg: {id},
+			asDataUri,
+			cdata,
 		});
 	}
-	static makeDisqus({node, username, title, url, uri}) {
+	makeDisqus({node, username, title, url, uri, asDataUri = true, cdata = false}) {
+		let {x} = this;
 		x.ch(node, "div#disqus_thread");
-		x.ch(node, "script", node => {
-			x.attr(node, "src", new Script().add(
-					(({username, title, url, uri}) => {
-						var disqus_config = window.disqus_config = function () {
-							this.page.title = title;
-							this.page.url = url;
-							this.page.identifier = uri;
-						};
-						(function () {
-							var d = window.document,
-							s = d.createElement("script");
-							s.src = `https://${username}.disqus.com/embed.js`;
-							s.setAttribute("data-timestamp", new Date().getTime());
-							(d.head || d.body).appendChild(s);
-						})();
-					}), {username, title, url, uri}).dataUri);
+		this.makeScript({
+			node,
+			f: ({username, title, url, uri}) => {
+				var disqus_config = window.disqus_config = function () {
+					this.page.title = title;
+					this.page.url = url;
+					this.page.identifier = uri;
+				};
+				(function () {
+					var d = window.document,
+					s = d.createElement("script");
+					s.src = `https://${username}.disqus.com/embed.js`;
+					s.setAttribute("data-timestamp", new Date().getTime());
+					(d.head || d.body).appendChild(s);
+				})();
+			},
+			arg: {username, title, url, uri},
+			asDataUri,
+			cdata,
 		});
 		x.ch(node, "noscript", node => {
 			x.t(node, "Please enable JavaScript to view the ");
 			x.ch(node, "a[href=https://disqus.com/?ref_noscript]", node => {
-				x.t(node, "comments powered by Disqus.");
+				x.t(node, "comments powered by Disqus");
 			});
 			x.t(node, ".");
 		});
 	}
-	makeInclude({node, fn, cs}) {
+	makeInclude({node, fn, cs = "UTF-8"}) {
 		let {x} = this;
-		let {wdocument} = node;
-		let res = {node};
-		cs = cs || "UTF-8";
-		let text = fs.readFileSync(fn, {encoding: cs});
-		wdocument.ch("div", div => {
-			div.node.innerHTML = text;
-			div = wdocument.wrap(div.node);
-			for(let wn of div.nodes) {
-				node.append(wn);
-			}
-		});
-		return {...res};
+		let text = new Textual({fn, cs}).read().string;
+		node.innerHTML = text;
+		return {text};
 	}
 	importGoogleFont({ss, name}) {
 		let {x} = this;
