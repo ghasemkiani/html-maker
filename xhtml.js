@@ -54,18 +54,22 @@ class XHtml extends cutil.mixin(Obj, maker) {
 		let nbody = document.body || x.ch(nhtml, "body");
 		return {document, nhtml, nhead, ntitle, nbody, ndescription, nkeywords, nauthor};
 	}
-	makeScript({node, url, f, params, asDataUri = false, integrity, crossorigin}) {
+	makeScript({node, url, f, params, asDataUri = false, integrity, crossorigin, cdata = false}) {
 		let {x} = this;
 		let nscript;
 		nscript = x.ch(node, "script", node => {
 			if (url) {
 				x.attr(node, "src", url);
 			} else {
-				let script = x.js({f});
+				let script = x.js(f);
 				if (asDataUri) {
 					x.attr(node, "src", script.dataUri);
 				} else {
-					x.t(node, script.string);
+					if (cdata) {
+						x.cdata(node, script.string);
+					} else {
+						x.t(node, script.string);
+					}
 				}
 			}
 			if (cutil.a(integrity)) {
@@ -77,7 +81,7 @@ class XHtml extends cutil.mixin(Obj, maker) {
 		});
 		return {nscript};
 	}
-	makeStylesheet({node, url, onStylesheet, asDataUri = false, integrity, crossorigin}) {
+	makeStylesheet({node, url, onStylesheet, asDataUri = false, integrity, crossorigin, cdata = false}) {
 		let {x} = this;
 		let nlink;
 		let nstyle;
@@ -98,7 +102,11 @@ class XHtml extends cutil.mixin(Obj, maker) {
 				return this.makeStylesheet({node, url});
 			} else {
 				x.ch(node, "style[type=text/css]", node => {
-					x.t(node, ss.string);
+					if (cdata) {
+						x.cdata(node, ss.string);
+					} else {
+						x.t(node, ss.string);
+					}
 				});
 			}
 		}
