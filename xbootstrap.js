@@ -1,9 +1,9 @@
 import {cutil} from "@ghasemkiani/base";
 import {Obj} from "@ghasemkiani/base";
 
-import {maker} from "./maker.js";
+import {Maker} from "./maker.js";
 
-class XBootstrap extends cutil.mixin(Obj, maker) {
+class XBootstrap extends Maker {
 	make({node, nhead, onLoaded}) {
 		let {x} = this;
 		let nlink;
@@ -124,7 +124,7 @@ class XBootstrap extends cutil.mixin(Obj, maker) {
 	}
 }
 
-class XDialog extends cutil.mixin(Obj, maker) {
+class XDialog extends Maker {
 	makeAttach({node, id}) {
 		let {x} = this;
 		x.chain(node, node => {

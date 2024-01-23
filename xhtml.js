@@ -1,10 +1,11 @@
 import {cutil} from "@ghasemkiani/base";
 import {Obj} from "@ghasemkiani/base";
 import {Textual} from "@ghasemkiani/base";
+import {iwx} from "@ghasemkiani/xdom";
 
-import {maker} from "./maker.js";
+import {Maker} from "./maker.js";
 
-class XHtml extends cutil.mixin(Obj, maker) {
+class XHtml extends Maker {
 	static {
 		cutil.extend(this.prototype, {
 			
@@ -12,7 +13,7 @@ class XHtml extends cutil.mixin(Obj, maker) {
 	}
 	makeDoc(arg) {
 		let {x} = this;
-		let {document, nhtml, title, description, keywords, author} = cutil.asObject(arg);
+		let {document, nhtml, title, description, keywords, author, noMetaCharset = false, cs = "UTF-8"} = cutil.asObject(arg);
 		if (cutil.na(document)) {
 			if (cutil.a(nhtml)) {
 				document = x.odoc(nhtml);
@@ -29,10 +30,15 @@ class XHtml extends cutil.mixin(Obj, maker) {
 		let nauthor;
 		let ntitle;
 		x.chain(nhead, node => {
-			x.ch(node, "meta[charset=utf-8]");
+			if (!noMetaCharset) {
+				x.ch(node, "meta", node => {
+					x.attr(node, "charset", cs);
+				});
+			}
 			ntitle = x.q(node, "title") || x.ch(node, "title");
 			x.chain(ntitle, node => {
 				if (cutil.a(title)) {
+					x.cl(node);
 					x.t(node, title);
 				}
 			});
@@ -214,4 +220,17 @@ class XHtml extends cutil.mixin(Obj, maker) {
 	}
 }
 
-export {XHtml};
+const iwxhtml = cutil.extend({}, iwx, {
+	_xhtml: null,
+	get xhtml() {
+		if (cutil.na(this._xhtml)) {
+			this._xhtml = XHtml.create(this);
+		}
+		return this._xhtml;
+	},
+	set xhtml(xhtml) {
+		this._xhtml = xhtml;
+	},
+});
+
+export {XHtml, iwxhtml};
