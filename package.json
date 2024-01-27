@@ -1,6 +1,6 @@
 {
 	"name": "@ghasemkiani/html-maker",
-	"version": "2.6.0",
+	"version": "2.6.1",
 	"description": "HTML maker utility",
 	"type": "module",
 	"main": "index.js",
@@ -26,7 +26,6 @@
 	"dependencies": {
 		"@ghasemkiani/base": "github:ghasemkiani/base",
 		"@ghasemkiani/dom": "github:ghasemkiani/dom",
-		"@ghasemkiani/wdom": "github:ghasemkiani/wdom",
 		"@ghasemkiani/xdom": "github:ghasemkiani/xdom"
 	}
 }
