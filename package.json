@@ -1,9 +1,12 @@
 {
 	"name": "@ghasemkiani/html-maker",
-	"version": "2.6.1",
+	"version": "2.6.2",
 	"description": "HTML maker utility",
 	"type": "module",
 	"main": "index.js",
+	"exports": {
+		".": "./index.js"
+	},
 	"scripts": {
 		"test": "node --test"
 	},
