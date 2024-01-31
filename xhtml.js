@@ -61,14 +61,14 @@ class XHtml extends Maker {
 		let nbody = document.body || x.ch(nhtml, "body");
 		return {document, nhtml, nhead, ntitle, nbody, ndescription, nkeywords, nauthor};
 	}
-	makeScript({node, url, f, arg, asDataUri = false, integrity, crossorigin, cdata = false}) {
+	makeScript({node, url, f, arg, asDataUri = false, integrity, crossorigin, cdata = false, pretty = false}) {
 		let {x} = this;
 		let nscript;
 		nscript = x.ch(node, "script", node => {
 			if (url) {
 				x.attr(node, "src", url);
 			} else {
-				let script = x.js(f, arg);
+				let script = x.js(f, arg, pretty);
 				if (asDataUri) {
 					x.attr(node, "src", script.dataUri);
 				} else {
@@ -162,7 +162,7 @@ class XHtml extends Maker {
 			cdata,
 		});
 	}
-	makeGoogleAnalytics({node, id, asDataUri = true, cdata = false}) {
+	makeGoogleAnalytics({node, id, asDataUri = true, cdata = false, pretty = true}) {
 		let {x} = this;
 		this.makeScript({node, url: `https://www.googletagmanager.com/gtag/js?id=${id}`});
 		this.makeScript({
@@ -178,9 +178,10 @@ class XHtml extends Maker {
 			arg: {id},
 			asDataUri,
 			cdata,
+			pretty,
 		});
 	}
-	makeDisqus({node, username, title, url, uri, asDataUri = true, cdata = false}) {
+	makeDisqus({node, username, title, url, uri, asDataUri = true, cdata = false, pretty = true}) {
 		let {x} = this;
 		x.ch(node, "div#disqus_thread");
 		this.makeScript({
@@ -202,6 +203,7 @@ class XHtml extends Maker {
 			arg: {username, title, url, uri},
 			asDataUri,
 			cdata,
+			pretty,
 		});
 		x.ch(node, "noscript", node => {
 			x.t(node, "Please enable JavaScript to view the ");
