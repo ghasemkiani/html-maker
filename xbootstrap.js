@@ -56,7 +56,6 @@ class XBootstrap extends Maker {
 	}
 	makeNavBar({node, items, fixed, active, idButtonToggle, appName, makeRelativeUri = uri => uri}) {
 		let {x} = this;
-		let res = {node};
 		idButtonToggle = idButtonToggle || cutil.srand();
 		let nodeNav;
 		if(cutil.isNil(fixed)) {
@@ -102,11 +101,10 @@ class XBootstrap extends Maker {
 				});
 			});
 		});
-		return {...res, nodeNav, idButtonToggle};
+		return {nodeNav, idButtonToggle};
 	}
 	makePills({node, items, fixed, active, makeRelativeUri = uri => uri}) {
 		let {x} = this;
-		let res = {node};
 		let nodeNav;
 		x.ch(node, "ul.nav nav-pills flex-column", node => {
 			nodeNav = node;
@@ -120,7 +118,7 @@ class XBootstrap extends Maker {
 				});
 			}
 		});
-		return {...res, nodeNav};
+		return {nodeNav};
 	}
 }
 
@@ -175,4 +173,30 @@ class XDialog extends Maker {
 	}
 }
 
-export {XBootstrap, XDialog};
+const iwxbootstrap = {
+	_xbootstrap: null,
+	get xbootstrap() {
+		if (cutil.na(this._xbootstrap)) {
+			this._xbootstrap = XBootstrap.create(this);
+		}
+		return this._xbootstrap;
+	},
+	set xbootstrap(xbootstrap) {
+		this._xbootstrap = xbootstrap;
+	},
+};
+
+const iwxdialog = {
+	_xdialog: null,
+	get xdialog() {
+		if (cutil.na(this._xdialog)) {
+			this._xdialog = XDialog.create(this);
+		}
+		return this._xdialog;
+	},
+	set xdialog(xdialog) {
+		this._xdialog = xdialog;
+	},
+};
+
+export {XBootstrap, XDialog, iwxbootstrap, iwxdialog};

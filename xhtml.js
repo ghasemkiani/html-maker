@@ -122,7 +122,10 @@ class XHtml extends Maker {
 	makeFavicon({node, nhead, uri = "/favicon.ico"}) {
 		let {x} = this;
 		node ||= nhead;
-		let nlink = x.ch(node, "link[rel=icon,type=image/x-icon]", node => {
+		let nlink = x.ch(node, "link[rel=icon]", node => {
+			if (/\.ico$/i.test(uri)) {
+				x.attr(node, "type", "image/x-icon");
+			}
 			x.attr(node, "href", uri);
 		});
 		return {nlink};
@@ -220,7 +223,8 @@ class XHtml extends Maker {
 	}
 }
 
-const iwxhtml = cutil.extend({}, iwx, {
+// needs iwx (and iwdom/iwjsdom)
+const iwxhtml = {
 	_xhtml: null,
 	get xhtml() {
 		if (cutil.na(this._xhtml)) {
@@ -231,6 +235,6 @@ const iwxhtml = cutil.extend({}, iwx, {
 	set xhtml(xhtml) {
 		this._xhtml = xhtml;
 	},
-});
+};
 
 export {XHtml, iwxhtml};

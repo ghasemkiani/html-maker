@@ -16,7 +16,7 @@ const maker = cutil.extend({}, iwx, {
 	},
 });
 
-class Maker extends cutil.extend(Obj, maker) {
+class Maker extends cutil.mixin(Obj, maker) {
 	static create({x}) {
 		return new this({x});
 	}
