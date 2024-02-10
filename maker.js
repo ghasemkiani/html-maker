@@ -3,16 +3,15 @@ import {Obj} from "@ghasemkiani/base";
 import {iwx} from "@ghasemkiani/xdom";
 
 const maker = cutil.extend({}, iwx, {
-	host: null,
-	_x: null,
-	get x() {
-		if (cutil.na(this._x) && cutil.a(this.host)) {
-			this._x = this.host.x;
-		}
-		return this._x;
+	_host: null,
+	get host() {
+		return this._host;
 	},
-	set x(x) {
-		this._x = x;
+	set host(host) {
+		this._host = host;
+		if (cutil.a(host)) {
+			this.x = host.x;
+		}
 	},
 });
 
