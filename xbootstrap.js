@@ -72,6 +72,9 @@ class XBootstrap extends Maker {
 					x.chain(node, onBrand);
 					x.attr(node, "href", maker.rel(appUri));
 					x.t(node, appName);
+					x.on(node, "click", () => {
+						x.q(x.doc(), ".navbar .navbar-collapse").classList.remove("show");
+					});
 				});
 				x.ch(node, "button.navbar-toggler[type=button,data-bs-toggle=collapse,data-bs-target=#navbarSupportedContent,aria-controls=navbarSupportedContent,aria-expanded=false,aria-label=Toggle navigation]", node => {
 					x.ch(node, "span.navbar-toggler-icon");
@@ -105,6 +108,10 @@ class XBootstrap extends Maker {
 					node.classList.add("disabled");
 					x.attr(node, "aria-disabled", "true");
 				}
+				x.on(node, "click", event => {
+					// customize?
+					x.q(x.doc(), ".navbar .navbar-collapse").classList.remove("show");
+				});
 				x.chain(node, onLink);
 			});
 			x.chain(node, onItem);
