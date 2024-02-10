@@ -4,24 +4,29 @@ import {Obj} from "@ghasemkiani/base";
 import {Maker} from "./maker.js";
 
 class XBootstrap extends Maker {
-	make({node, nhead, onLoaded}) {
+	make({node, nhtml, nhead, nbody, rtl = false, onLoaded}) {
 		let {x} = this;
+		nhtml ||= x.root(x.odoc(node || nhead || nbody));
+		if (cutil.na(rtl)) {
+			rtl = /rtl/i.test(x.attr(nhtml, "dir")) || /^(ar|fa|ur|he)/i.test(x.attr(nhtml, "lang"));
+		}
 		let nlink;
 		let nscript;
-		node ||= nhead;
-		x.chain(node, node => {
-			x.ch(node, "link[rel=stylesheet,href=https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css]", node => {
+		x.chain(node || nhead, node => {
+			x.ch(node, `link[rel=stylesheet,href=https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap${rtl ? ".rtl" : ""}.min.css]`, node => {
 				nlink = node;
 			});
+		});
+		x.chain(node || nbody, node => {
 			x.ch(node, "script[crossorigin=anonymous,src=https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js]", node => {
 				nscript = node;
 			});
-			Promise.all([
-				new Promise((resolve) => x.on(nlink, "load", resolve)),
-				new Promise((resolve) => x.on(nscript, "load", resolve)),
-			]).then(() => {
-				x.chain(node, onLoaded);
-			});
+		});
+		Promise.all([
+			new Promise((resolve) => x.on(nlink, "load", resolve)),
+			new Promise((resolve) => x.on(nscript, "load", resolve)),
+		]).then(() => {
+			x.chain(node, onLoaded);
 		});
 		return {nlink, nscript};
 	}
@@ -52,6 +57,96 @@ class XBootstrap extends Maker {
 		x.ch(node, "script[crossorigin=anonymous]", node => {
 			x.attr(node, "src", !rtl ? "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" : "https://cdn.rtlcss.com/bootstrap/v4.0.0/js/bootstrap.min.js");
 			x.attr(node, "integrity", !rtl ? "sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" : "sha384-54+cucJ4QbVb99v8dcttx/0JRx4FHMmhOWi4W+xrXpKcsKQodCBwAvu3xxkZAwsH");
+		});
+	}
+	makeNavBarV5({node, appName, appUri = "/", items, active, onBrand, onItems}) {
+		let maker = this;
+		let {x} = maker;
+		let nbrand;
+		let nitems;
+		x.ch(node, "nav.navbar.navbar-expand-lg.bg-body-tertiary", node => {
+			x.ch(node, "div.container-fluid", node => {
+				x.ch(node, "a.navbar-brand", node => {
+					nbrand = node;
+					x.chain(node, onBrand);
+					x.attr("href", maker.rel(appUri));
+					x.t(node, appName);
+				});
+				x.ch(node, "button.navbar-toggler[type=button,data-bs-toggle=collapse,data-bs-target=#navbarSupportedContent,aria-controls=navbarSupportedContent,aria-expanded=false,aria-label=Toggle navigation]", node => {
+					x.ch(node, "span.navbar-toggler-icon");
+				});
+				x.ch(node, "div.collapse.navbar-collapse[id=navbarSupportedContent]", node => {
+					x.ch(node, "ul.navbar-nav.me-auto.mb-2.mb-lg-0", node => {
+						nitems = node;
+						x.chain(node, onItems);
+						for (let {uri, text, disabled = false} of cutil.asArray(items)) {
+							maker.makeNavBarItemV5({node, uri, text, disabled, active});
+						}
+					});
+					x.ch(node, "form.d-flex[role=search]", node => {
+						x.ch(node, "input.form-control.me-2[type=search,placeholder=Search,aria-label=Search]");
+						x.ch(node, "button.btn.btn-outline-success[type=submit]", node => {
+							x.t(node, "Search");
+						});
+					});
+				});
+			});
+		});
+		return {nbrand, nitems};
+	}
+	makeNavBarItemV5({node, uri, text, disabled = false, active, onItem, onLink}) {
+		let maker = this;
+		let {x} = maker;
+		x.ch(node, "li.nav-item", node => {
+			x.ch(node, "a.nav-link", node => {
+				x.t(node, text);
+				if (active === true || active === uri) {
+					node.classList.add("active");
+					x.attr(node, "aria-current", "page");
+				}
+				x.attr(node, "href", maker.rel(uri));
+				if (disabled) {
+					node.classList.add("disabled");
+					x.attr(node, "aria-disabled", "true");
+				}
+				x.chain(node, onLink);
+			});
+			x.chain(node, onItem);
+		});
+	}
+	makeNavBarItemDropdownV5({node, text, onDropdown, onItems}) {
+		let maker = this;
+		let {x} = maker;
+		let ndropdown;
+		let nitems;
+		x.ch(node, "li.nav-item.dropdown", node => {
+			ndropdown = node;
+			x.chain(node, onDropdown);
+			x.ch(node, "a.nav-link.dropdown-toggle[href=#,role=button,data-bs-toggle=dropdown,aria-expanded=false]", node => {
+				x.t(node, text);
+			});
+			x.ch(node, "ul.dropdown-menu", node => {
+				nitems = node;
+				x.chain(node, onItems);
+			});
+		});
+		return {ndropdown, nitems};
+	}
+	makeDropdownItemV5({node, uri, text}) {
+		let maker = this;
+		let {x} = maker;
+		x.ch(node, "li", node => {
+			x.ch(node, "a.dropdown-item", node => {
+				x.t(node, text);
+				x.attr(node, "href", maker.rel(uri));
+			});
+		});
+	}
+	makeDropdownDividerV5({node}) {
+		let maker = this;
+		let {x} = maker;
+		x.ch(node, "li", node => {
+			x.ch(node, "hr.dropdown-divider");
 		});
 	}
 	makeNavBar({node, items, fixed, active, idButtonToggle, appName, makeRelativeUri = uri => uri}) {

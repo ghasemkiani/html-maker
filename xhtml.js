@@ -24,7 +24,7 @@ class XHtml extends Maker {
 		if (cutil.na(nhtml)) {
 			nhtml = x.root(document);
 		}
-		let nhead = document.head || x.ch(nhtml, "head");
+		let nhead = x.q(document, "head") || x.ch(nhtml, "head");
 		let ndescription;
 		let nkeywords;
 		let nauthor;
@@ -58,7 +58,7 @@ class XHtml extends Maker {
 				});
 			}
 		});
-		let nbody = document.body || x.ch(nhtml, "body");
+		let nbody = x.q(document, "body") || x.ch(nhtml, "body");
 		return {document, nhtml, nhead, ntitle, nbody, ndescription, nkeywords, nauthor};
 	}
 	makeScript({node, url, f, arg, asDataUri = false, integrity, crossorigin, cdata = false, pretty = false}) {

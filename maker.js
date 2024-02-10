@@ -17,8 +17,12 @@ const maker = cutil.extend({}, iwx, {
 });
 
 class Maker extends cutil.mixin(Obj, maker) {
-	static create({x}) {
-		return new this({x});
+	static create(host) {
+		return new this({host});
+	}
+	rel(uri) {
+		let maker = this;
+		return /^[#]/.test(uri) ? uri : "makeRelativeUri" in cutil.asObject(maker.host) ? maker.host.makeRelativeUri(uri) : uri;
 	}
 }
 
