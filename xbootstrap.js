@@ -62,6 +62,7 @@ class XBootstrap extends Maker {
 	makeNavBarV5({node, appName, appUri = "/", items, active, onBrand, onItems}) {
 		let maker = this;
 		let {x} = maker;
+		let nnavbar;
 		let nbrand;
 		let nitems;
 		x.ch(node, "nav.navbar.navbar-expand-lg.bg-body-tertiary", node => {
@@ -69,13 +70,14 @@ class XBootstrap extends Maker {
 				x.ch(node, "a.navbar-brand", node => {
 					nbrand = node;
 					x.chain(node, onBrand);
-					x.attr("href", maker.rel(appUri));
+					x.attr(node, "href", maker.rel(appUri));
 					x.t(node, appName);
 				});
 				x.ch(node, "button.navbar-toggler[type=button,data-bs-toggle=collapse,data-bs-target=#navbarSupportedContent,aria-controls=navbarSupportedContent,aria-expanded=false,aria-label=Toggle navigation]", node => {
 					x.ch(node, "span.navbar-toggler-icon");
 				});
 				x.ch(node, "div.collapse.navbar-collapse[id=navbarSupportedContent]", node => {
+					nnavbar = node;
 					x.ch(node, "ul.navbar-nav.me-auto.mb-2.mb-lg-0", node => {
 						nitems = node;
 						x.chain(node, onItems);
@@ -83,16 +85,10 @@ class XBootstrap extends Maker {
 							maker.makeNavBarItemV5({node, uri, text, disabled, active});
 						}
 					});
-					x.ch(node, "form.d-flex[role=search]", node => {
-						x.ch(node, "input.form-control.me-2[type=search,placeholder=Search,aria-label=Search]");
-						x.ch(node, "button.btn.btn-outline-success[type=submit]", node => {
-							x.t(node, "Search");
-						});
-					});
 				});
 			});
 		});
-		return {nbrand, nitems};
+		return {nnavbar, nbrand, nitems};
 	}
 	makeNavBarItemV5({node, uri, text, disabled = false, active, onItem, onLink}) {
 		let maker = this;
