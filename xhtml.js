@@ -141,7 +141,7 @@ class XHtml extends Maker {
 		let {x} = this;
 		this.makeScript({
 			node,
-			f: ({id, domain}) => {
+			f: function({id, domain}) {
 				(function (i, s, o, g, r, a, m) {
 					i["GoogleAnalyticsObject"] = r;
 					i[r] = i[r] || function () {
@@ -167,7 +167,7 @@ class XHtml extends Maker {
 		this.makeScript({node, url: `https://www.googletagmanager.com/gtag/js?id=${id}`});
 		this.makeScript({
 			node,
-			f: ({id}) => {
+			f: function({id}) {
 				window.dataLayer = window.dataLayer || [];
 				function gtag() {
 					dataLayer.push(arguments);
