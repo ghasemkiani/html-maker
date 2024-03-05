@@ -135,13 +135,14 @@ class XBootstrap extends Maker {
 		});
 		return {ndropdown, nitems};
 	}
-	makeDropdownItemV5({node, uri, text}) {
+	makeDropdownItemV5({node, uri, text, onLink}) {
 		let maker = this;
 		let {x} = maker;
 		x.ch(node, "li", node => {
 			x.ch(node, "a.dropdown-item", node => {
 				x.t(node, text);
 				x.attr(node, "href", maker.rel(uri));
+				x.chain(node, onLink);
 			});
 		});
 	}
