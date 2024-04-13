@@ -26,7 +26,7 @@ class XBootstrap extends Maker {
 			new Promise((resolve) => x.on(nlink, "load", resolve)),
 			new Promise((resolve) => x.on(nscript, "load", resolve)),
 		]).then(() => {
-			x.chain(node, onLoaded);
+			x.chain(node || nbody || nhead, onLoaded);
 		});
 		return {nlink, nscript};
 	}
