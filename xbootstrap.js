@@ -22,13 +22,13 @@ class XBootstrap extends Maker {
 				nscript = node;
 			});
 		});
-		Promise.all([
+		let promise = Promise.all([
 			new Promise((resolve) => x.on(nlink, "load", resolve)),
 			new Promise((resolve) => x.on(nscript, "load", resolve)),
 		]).then(() => {
 			x.chain(node || nbody || nhead, onLoaded);
 		});
-		return {nlink, nscript};
+		return {nlink, nscript, promise};
 	}
 	makeBootstrapV4Css({node, rtl}) {
 		let {x} = this;
