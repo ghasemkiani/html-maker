@@ -30,6 +30,47 @@ class XBootstrap extends Maker {
 		});
 		return {nlink, nscript, promise};
 	}
+	makeHead({node, nhtml, nhead, rtl = false, onLoaded}) {
+		let {x} = this;
+		nhtml ||= x.root(x.odoc(node || nhead));
+		if (cutil.na(rtl)) {
+			rtl = /rtl/i.test(x.attr(nhtml, "dir")) || /^(ar|fa|ur|he)/i.test(x.attr(nhtml, "lang"));
+		}
+		let nlink;
+		x.chain(node || nhead, node => {
+			x.ch(node, `link[rel=stylesheet,href=https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap${rtl ? ".rtl" : ""}.min.css]`, node => {
+				nlink = node;
+			});
+		});
+		let promise = new Promise((resolve) => x.on(nlink, "load", resolve)).then(() => {
+			x.chain(node || nhead, onLoaded);
+		});
+		return {nlink, promise};
+	}
+	makeBody({node, nbody, onLoaded}) {
+		let {x} = this;
+		let nscript;
+		x.chain(node || nbody, node => {
+			x.ch(node, "script[crossorigin=anonymous,src=https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js]", node => {
+				nscript = node;
+			});
+		});
+		let promise = new Promise((resolve) => x.on(nscript, "load", resolve)).then(() => {
+			x.chain(node || nbody, onLoaded);
+		});
+		return {nscript, promise};
+	}
+	make({node, nhtml, nhead, nbody, rtl = false, onLoaded}) {
+		let {nlink, promise: promiseHead} = this.makeHead({node, nhtml, nhead, rtl});
+		let {nscript, promise: promiseBody} = this.makeBody({node, nbody});
+		let promise = Promise.all([
+			promiseHead,
+			promiseBody,
+		]).then(() => {
+			x.chain(node || nbody || nhead, onLoaded);
+		});
+		return {nlink, nscript, promise};
+	}
 	makeBootstrapV4Css({node, rtl}) {
 		let {x} = this;
 		x.ch(node, "meta[name=viewport]", node => {
