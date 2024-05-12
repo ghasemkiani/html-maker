@@ -100,22 +100,24 @@ class XBootstrap extends Maker {
 			x.attr(node, "integrity", !rtl ? "sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" : "sha384-54+cucJ4QbVb99v8dcttx/0JRx4FHMmhOWi4W+xrXpKcsKQodCBwAvu3xxkZAwsH");
 		});
 	}
-	makeNavBarV5({node, appName, appUri = "/", items, active, onBrand, onItems}) {
+	makeNavBarV5({node, appName, appUri = "/", items, active, onBrand, onItems, container = false}) {
 		let maker = this;
 		let {x} = maker;
 		let nnavbar;
 		let nbrand;
 		let nitems;
 		x.ch(node, "nav.navbar.navbar-expand-lg.bg-body-tertiary", node => {
-			x.ch(node, "div.container-fluid", node => {
+			x.ch(node, `div.${container ? "container" : "container-fluid"}`, node => {
 				x.ch(node, "a.navbar-brand", node => {
 					nbrand = node;
-					x.chain(node, onBrand);
-					x.attr(node, "href", maker.rel(appUri));
-					x.t(node, appName);
 					x.on(node, "click", () => {
 						x.q(x.doc(), ".navbar .navbar-collapse").classList.remove("show");
 					});
+					onBrand ||= node => {
+						x.attr(node, "href", maker.rel(appUri));
+						x.t(node, appName);
+					};
+					x.chain(node, onBrand);
 				});
 				x.ch(node, "button.navbar-toggler[type=button,data-bs-toggle=collapse,data-bs-target=#navbarSupportedContent,aria-controls=navbarSupportedContent,aria-expanded=false,aria-label=Toggle navigation]", node => {
 					x.ch(node, "span.navbar-toggler-icon");
@@ -124,10 +126,10 @@ class XBootstrap extends Maker {
 					nnavbar = node;
 					x.ch(node, "ul.navbar-nav.me-auto.mb-2.mb-lg-0", node => {
 						nitems = node;
-						x.chain(node, onItems);
 						for (let {uri, text, disabled = false} of cutil.asArray(items)) {
 							maker.makeNavBarItemV5({node, uri, text, disabled, active});
 						}
+						x.chain(node, onItems);
 					});
 				});
 			});
@@ -259,6 +261,18 @@ class XBootstrap extends Maker {
 			}
 		});
 		return {nodeNav};
+	}
+	makeAlert({node, kind = "info", f}) {
+		let {x} = this;
+		let ndiv;
+		x.chain(node, node => {
+			x.ch(node, "div.alert[role=alert]", node => {
+				ndiv = node;
+				node.classList.add(`alert-${kind}`);
+				x.chain(node, f);
+			});
+		});
+		return {ndiv};
 	}
 }
 
