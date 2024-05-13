@@ -30,7 +30,7 @@ class XHtml extends Maker {
 		let nauthor;
 		let ntitle;
 		x.chain(nhead, node => {
-			if (!noMetaCharset) {
+			if (!noMetaCharset && x.qq(node, "meta[charset]").length === 0) {
 				x.ch(node, "meta", node => {
 					x.attr(node, "charset", cs);
 				});
