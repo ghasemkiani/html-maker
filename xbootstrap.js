@@ -4,7 +4,7 @@ import {Obj} from "@ghasemkiani/base";
 import {Maker} from "./maker.js";
 
 class XBootstrap extends Maker {
-	make({node, nhtml, nhead, nbody, rtl = false, onLoaded}) {
+	make0({node, nhtml, nhead, nbody, rtl = false, onLoaded}) {
 		let {x} = this;
 		nhtml ||= x.root(x.odoc(node || nhead || nbody));
 		if (cutil.na(rtl)) {
@@ -61,6 +61,7 @@ class XBootstrap extends Maker {
 		return {nscript, promise};
 	}
 	make({node, nhtml, nhead, nbody, rtl = false, onLoaded}) {
+		let {x} = this;
 		let {nlink, promise: promiseHead} = this.makeHead({node, nhtml, nhead, rtl});
 		let {nscript, promise: promiseBody} = this.makeBody({node, nbody});
 		let promise = Promise.all([
