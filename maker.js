@@ -29,4 +29,18 @@ class Maker extends cutil.mixin(Obj, maker) {
   }
 }
 
-export { Maker, maker };
+const iwmaker = {
+  Maker,
+  _maker: null,
+  get maker() {
+		if (cutil.na(this._maker)) {
+			this._maker = this.Maker.create(this);
+		}
+		return this._maker;
+	},
+	set maker(maker) {
+		this._maker = maker;
+	},
+};
+
+export { Maker, maker, iwmaker };
