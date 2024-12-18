@@ -1,6 +1,11 @@
 import { cutil } from "@ghasemkiani/base";
 import { Obj } from "@ghasemkiani/base";
 import { iwx } from "@ghasemkiani/xdom";
+import { iwdom } from "@ghasemkiani/dom";
+
+const host = cutil.extend({}, iwdom, iwx, {
+  //
+});
 
 const maker = cutil.extend({}, iwx, {
   _host: null,
@@ -43,4 +48,4 @@ const iwmaker = {
 	},
 };
 
-export { Maker, maker, iwmaker };
+export { host, maker, Maker, iwmaker };
