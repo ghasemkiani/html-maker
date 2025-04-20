@@ -40,6 +40,22 @@ class XBootstrap extends Maker {
     });
     return { nlink, nscript, promise };
   }
+  makeBootstrapIcons({ node }) {
+    let maker = this;
+    let { x } = maker;
+    let nlink;
+    x.chain(node, (node) => {
+      x.ch(
+        node,
+        `link[rel=stylesheet,href=https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css]`,
+        (node) => {
+          nlink = node;
+        },
+      );
+    });
+    let promise = new Promise((resolve) => x.on(nlink, "load", resolve));
+    return { nlink, promise };
+  }
   makeHead({ node, nhtml, nhead, rtl = false, onLoaded }) {
     let { x } = this;
     nhtml ||= x.root(x.odoc(node || nhead));
