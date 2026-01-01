@@ -1,34 +1,34 @@
 {
-	"name": "@ghasemkiani/html-maker",
-	"version": "2.7.19",
-	"description": "HTML maker utility",
-	"type": "module",
-	"main": "index.js",
-	"exports": {
-		".": "./index.js"
-	},
-	"scripts": {
-		"test": "node --test"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://gitlab.com/ghasemkiani/html-maker.git"
-	},
-	"keywords": [
-		"javascript",
-		"nodejs",
-		"html",
-		"xml"
-	],
-	"author": "Ghasem Kiani",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://gitlab.com/ghasemkiani/html-maker/issues"
-	},
-	"homepage": "https://gitlab.com/ghasemkiani/html-maker#readme",
-	"dependencies": {
-		"@ghasemkiani/base": "github:ghasemkiani/base",
-		"@ghasemkiani/dom": "github:ghasemkiani/dom",
-		"@ghasemkiani/xdom": "github:ghasemkiani/xdom"
-	}
+  "name": "@ghasemkiani/html-maker",
+  "version": "2.7.20",
+  "description": "HTML maker utility",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/ghasemkiani/html-maker.git"
+  },
+  "keywords": [
+    "javascript",
+    "nodejs",
+    "html",
+    "xml"
+  ],
+  "author": "Ghasem Kiani",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/ghasemkiani/html-maker/issues"
+  },
+  "homepage": "https://gitlab.com/ghasemkiani/html-maker#readme",
+  "dependencies": {
+    "@ghasemkiani/base": "github:ghasemkiani/base",
+    "@ghasemkiani/dom": "github:ghasemkiani/dom",
+    "@ghasemkiani/xdom": "github:ghasemkiani/xdom"
+  }
 }

@@ -18,6 +18,12 @@ const maker = cutil.extend({}, iwx, {
       this.x = host.x;
     }
   },
+  cmp(Cmp, arg, f) {
+    const maker = this;
+    const cmp = new Cmp(cutil.extend({ maker }, arg));
+    cmp.render();
+    this.x.chain(cmp, f);
+  },
 });
 
 const rel = {
@@ -51,4 +57,11 @@ const iwmaker = {
 	},
 };
 
-export { host, maker, rel, Maker, iwmaker };
+class Cmp extends Obj {
+  static {
+    cutil.extend(this.prototype, {});
+  }
+  render() {}
+}
+
+export { host, maker, rel, Maker, iwmaker, Cmp };
