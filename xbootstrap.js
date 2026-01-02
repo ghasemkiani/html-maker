@@ -7,7 +7,8 @@ class XBootstrap extends Maker {
   static {
     cutil.extend(this.prototype, {
       version: "5.3.8",
-      hashCss: "sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB",
+      hashCss0: "sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB",
+      hashCss: "sha384-CfCrinSRH2IR6a4e6fy2q6ioOX7O6Mtm1L9vRvFZ1trBncWmMePhzvafv7oIcWiW",
       hashJs: "sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI",
     });
   }
@@ -98,7 +99,7 @@ class XBootstrap extends Maker {
     x.chain(node || nbody, (node) => {
       x.ch(
         node,
-        "script[src=https://cdn.jsdelivr.net/npm/bootstrap@${version}/dist/js/bootstrap.bundle.min.js,integrity=${hashJs},crossorigin=anonymous]",
+        `script[src=https://cdn.jsdelivr.net/npm/bootstrap@${version}/dist/js/bootstrap.bundle.min.js,integrity=${hashJs},crossorigin=anonymous]`,
         (node) => {
           nscript = node;
         },
