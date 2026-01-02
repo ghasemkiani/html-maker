@@ -4,6 +4,13 @@ import { Obj } from "@ghasemkiani/base";
 import { Maker } from "./maker.js";
 
 class XBootstrap extends Maker {
+  static {
+    cutil.extend(this.prototype, {
+      version: "5.3.8",
+      hashCss: "sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB",
+      hashJs: "sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI",
+    });
+  }
   make0({ node, nhtml, nhead, nbody, rtl = false, onLoaded }) {
     let { x } = this;
     nhtml ||= x.root(x.odoc(node || nhead || nbody));
@@ -58,6 +65,8 @@ class XBootstrap extends Maker {
   }
   makeHead({ node, nhtml, nhead, rtl = false, onLoaded }) {
     let { x } = this;
+    let { version } = this;
+    let { hashCss } = this;
     nhtml ||= x.root(x.odoc(node || nhead));
     if (cutil.na(rtl)) {
       rtl =
@@ -68,7 +77,7 @@ class XBootstrap extends Maker {
     x.chain(node || nhead, (node) => {
       x.ch(
         node,
-        `link[rel=stylesheet,href=https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap${rtl ? ".rtl" : ""}.min.css]`,
+        `link[rel=stylesheet,href=https://cdn.jsdelivr.net/npm/bootstrap@${version}/dist/css/bootstrap${rtl ? ".rtl" : ""}.min.css,integrity=${hashCss},crossorigin=anonymous]`,
         (node) => {
           nlink = node;
         },
@@ -83,11 +92,13 @@ class XBootstrap extends Maker {
   }
   makeBody({ node, nbody, onLoaded }) {
     let { x } = this;
+    let { version } = this;
+    let { hashJs } = this;
     let nscript;
     x.chain(node || nbody, (node) => {
       x.ch(
         node,
-        "script[crossorigin=anonymous,src=https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js]",
+        "script[src=https://cdn.jsdelivr.net/npm/bootstrap@${version}/dist/js/bootstrap.bundle.min.js,integrity=${hashJs},crossorigin=anonymous]",
         (node) => {
           nscript = node;
         },

@@ -20,6 +20,10 @@ const maker = cutil.extend({}, iwx, {
   },
   cmp(Cmp, arg, f) {
     const maker = this;
+    if (typeof arg === "function") {
+      f = arg;
+      arg = {};
+    }
     const cmp = new Cmp(cutil.extend({ maker }, arg));
     cmp.render();
     this.x.chain(cmp, f);
@@ -59,7 +63,9 @@ const iwmaker = {
 
 class Cmp extends Obj {
   static {
-    cutil.extend(this.prototype, {});
+    cutil.extend(this.prototype, {
+      node: null,
+    });
   }
   render() {}
 }
