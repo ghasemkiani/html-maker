@@ -7,11 +7,43 @@ class XBootstrap extends Maker {
   static {
     cutil.extend(this.prototype, {
       version: "5.3.8",
-      hashCss0: "sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB",
       hashCss: "sha384-CfCrinSRH2IR6a4e6fy2q6ioOX7O6Mtm1L9vRvFZ1trBncWmMePhzvafv7oIcWiW",
+      hashCssRtl: "",
       hashJs: "sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI",
+      versionIcons: "1.11.1",
+      hashCssIcons: "4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd",
+      _linkCss: null,
+      _linkCssRtl: null,
+      _linkJs: null,
     });
   }
+  get linkCss() {
+		if (cutil.na(this._linkCss)) {
+			this._linkCss = `href=https://cdn.jsdelivr.net/npm/bootstrap@${this.version}/dist/css/bootstrap.min.css`;
+		}
+		return this._linkCss;
+	}
+	set linkCss(linkCss) {
+		this._linkCss = linkCss;
+	}
+  get linkCssRtl() {
+		if (cutil.na(this._linkCssRtl) && cutil.a(this.linkCss)) {
+			this._linkCssRtl = this.linkCss.replace(/\.min\.css$/i, ".rtl.min.css");
+		}
+		return this._linkCssRtl;
+	}
+	set linkCssRtl(linkCssRtl) {
+		this._linkCssRtl = linkCssRtl;
+	}
+  get linkJs() {
+		if (cutil.na(this._linkJs)) {
+			this._linkJs = `https://cdn.jsdelivr.net/npm/bootstrap@${this.version}/dist/js/bootstrap.bundle.min.js`;
+		}
+		return this._linkJs;
+	}
+	set linkJs(linkJs) {
+		this._linkJs = linkJs;
+	}
   make0({ node, nhtml, nhead, nbody, rtl = false, onLoaded }) {
     let { x } = this;
     nhtml ||= x.root(x.odoc(node || nhead || nbody));
@@ -55,7 +87,7 @@ class XBootstrap extends Maker {
     x.chain(node, (node) => {
       x.ch(
         node,
-        `link[rel=stylesheet,href=https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css]`,
+        `link[rel=stylesheet,href=https://cdn.jsdelivr.net/npm/bootstrap-icons@${maker.versionIcons}/font/bootstrap-icons.css,integrity=${maker.hashCssIcons},crossorigin=anonymous]`,
         (node) => {
           nlink = node;
         },
@@ -68,6 +100,7 @@ class XBootstrap extends Maker {
     let { x } = this;
     let { version } = this;
     let { hashCss } = this;
+    let { hashCssRtl } = this;
     nhtml ||= x.root(x.odoc(node || nhead));
     if (cutil.na(rtl)) {
       rtl =
@@ -78,7 +111,7 @@ class XBootstrap extends Maker {
     x.chain(node || nhead, (node) => {
       x.ch(
         node,
-        `link[rel=stylesheet,href=https://cdn.jsdelivr.net/npm/bootstrap@${version}/dist/css/bootstrap${rtl ? ".rtl" : ""}.min.css,integrity=${hashCss},crossorigin=anonymous]`,
+        `link[rel=stylesheet,href=${rtl ? this.linkCssRtl : this.linkCss},integrity=${rtl ? hashCssRtl : hashCss},crossorigin=anonymous]`,
         (node) => {
           nlink = node;
         },
@@ -99,7 +132,7 @@ class XBootstrap extends Maker {
     x.chain(node || nbody, (node) => {
       x.ch(
         node,
-        `script[src=https://cdn.jsdelivr.net/npm/bootstrap@${version}/dist/js/bootstrap.bundle.min.js,integrity=${hashJs},crossorigin=anonymous]`,
+        `script[src=${this.linkJs},integrity=${hashJs},crossorigin=anonymous]`,
         (node) => {
           nscript = node;
         },
