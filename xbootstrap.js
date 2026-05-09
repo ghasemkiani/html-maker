@@ -19,7 +19,7 @@ class XBootstrap extends Maker {
   }
   get linkCss() {
 		if (cutil.na(this._linkCss)) {
-			this._linkCss = `href=https://cdn.jsdelivr.net/npm/bootstrap@${this.version}/dist/css/bootstrap.min.css`;
+			this._linkCss = `https://cdn.jsdelivr.net/npm/bootstrap@${this.version}/dist/css/bootstrap.min.css`;
 		}
 		return this._linkCss;
 	}
