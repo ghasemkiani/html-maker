@@ -1,5 +1,6 @@
 import { cutil } from "@ghasemkiani/base";
 import { Obj } from "@ghasemkiani/base";
+import { pubsub } from "@ghasemkiani/base-utils";
 import { iwx } from "@ghasemkiani/xdom";
 import { iwdom } from "@ghasemkiani/dom";
 
@@ -63,7 +64,7 @@ const iwmaker = {
 	},
 };
 
-class Cmp extends Obj {
+class Cmp extends cutil.mixin(Obj, pubsub) {
   static {
     cutil.extend(this.prototype, {
       node: null,
