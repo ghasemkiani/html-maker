@@ -20,13 +20,15 @@ const maker = cutil.extend({}, iwx, {
   },
   cmp(Cmp, arg, f) {
     const maker = this;
+    let result;
     if (typeof arg === "function") {
       f = arg;
       arg = {};
     }
     const cmp = new Cmp(cutil.extend({ maker }, arg));
-    cmp.render();
+    result = cmp.render();
     this.x.chain(cmp, f);
+    return result;
   },
 });
 

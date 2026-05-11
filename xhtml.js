@@ -127,7 +127,8 @@ class XHtml extends Maker {
     let nlink;
     let nstyle;
     if (url) {
-      nlink = x.ch(node, "link[rel=stylesheet,type=text/css]", (node) => {
+      x.ch(node, "link[rel=stylesheet,type=text/css]", (node) => {
+        nlink = node;
         x.attr(node, "href", url);
         if (cutil.a(integrity)) {
           x.attr(node, "integrity", integrity);
@@ -143,6 +144,7 @@ class XHtml extends Maker {
         return this.makeStylesheet({ node, url });
       } else {
         x.ch(node, "style[type=text/css]", (node) => {
+          nstyle = node;
           if (cdata) {
             x.cdata(node, ss.string);
           } else {
